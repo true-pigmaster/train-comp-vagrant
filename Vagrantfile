@@ -50,10 +50,12 @@ Vagrant.configure("2") do |config|
   # Example for VirtualBox:
   #
   # config.vm.provider "hyperv"
-config.vm.provider "hyperv" do |h|
-h.enable_virtualization_extensions = true
-h.differencing_disk = true
-end
+  config.vm.provider "hyperv" do |h|
+    h.enable_virtualization_extensions = true
+    h.linked_clone = true
+    h.cpus = "1"
+    memory = "1024"
+  end
   # config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
@@ -72,4 +74,20 @@ end
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
+  config.vm.define "anServer1" do |anServer1|
+    anServer1.vm.box = "hashicorp/bionic64"
+    #anServer1.vm.vmname = "anServer1"
+    anServer1.vm.synced_folder ".", "/vagrant", disabled: true
+    anServer1.vm.provider:hyperv do |h1|
+      h1.enable_virtualization_extensions = true
+      h1.linked_clone = true
+      h1.cpus = "1"
+      h1.memory = "1024"
+      h1.vmname = "anServer1"
+    end
+  end
+  config.vm.provision "shell", inline: <<-SHELL
+     apt-get update
+     apt-get install -y ansible
+    SHELL
 end

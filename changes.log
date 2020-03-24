@@ -1,0 +1,15 @@
+version 0.01 
+	Created the file and added basic functions to work with hyperv
+
+version 0.10
+	replaced in hyperv options differencing_disk with linked_clone
+	added definition of the machine anServer1 that can be used as template
+	added config options for hyperv: 
+	  h1.cpus = "1"			#limits machine to one cpu 
+          h1.memory = "1024"		#limits RAM memory to 1GB
+          h1.vmname = "anServer1"	#gives a name to a machine - looks nicely in Hyperv Manager
+	  anServer1.vm.synced_folder ".", "/vagrant", disabled: true # disables the default share
+	added script to install ansible automatically 
+	disabled checkpoints in virtual machine
+	anServer1.vm.hostname = "anServer1" - configures hostname for a machine
+
