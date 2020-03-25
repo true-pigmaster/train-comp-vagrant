@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-    config.vm.network "public_network"
+  #  config.vm.network "public_network"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -78,16 +78,61 @@ Vagrant.configure("2") do |config|
     anServer1.vm.box = "hashicorp/bionic64"
     #anServer1.vm.vmname = "anServer1"
     anServer1.vm.synced_folder ".", "/vagrant", disabled: true
+    anServer1.vm.hostname = "anServer1"
+    #anServer1.vm.base_address = "10.0.0.10"
     anServer1.vm.provider:hyperv do |h1|
       h1.enable_virtualization_extensions = true
       h1.linked_clone = true
       h1.cpus = "1"
       h1.memory = "1024"
       h1.vmname = "anServer1"
+      h1.enable_checkpoints = false
     end
-  end
-  config.vm.provision "shell", inline: <<-SHELL
+    anServer1.vm.provision "shell", inline: <<-SHELL
      apt-get update
      apt-get install -y ansible
     SHELL
+  end
+  config.vm.define "anServer2" do |anServer2|
+    anServer2.vm.box = "hashicorp/bionic64"
+    #anServer2.vm.vmname = "anServer2"
+    anServer2.vm.synced_folder ".", "/vagrant", disabled: true
+    anServer2.vm.hostname = "anServer2"
+    #anServer2.vm.base_address = "10.0.0.10"
+    anServer2.vm.provider:hyperv do |h2|
+      h2.enable_virtualization_extensions = true
+      h2.linked_clone = true
+      h2.cpus = "1"
+      h2.memory = "1024"
+      h2.vmname = "anServer2"
+      h2.enable_checkpoints = false
+    end
+    anServer2.vm.provision "shell", inline: <<-SHELL
+     apt-get update
+     apt-get install -y ansible
+    SHELL
+  end
+  config.vm.define "anServer3" do |anServer3|
+    anServer3.vm.box = "centos/7"
+    #anServer2.vm.vmname = "anServer2"
+    anServer3.vm.synced_folder ".", "/vagrant", disabled: true
+    anServer3.vm.hostname = "anServer3"
+    #anServer2.vm.base_address = "10.0.0.10"
+    anServer3.vm.provider:hyperv do |h3|
+      h3.enable_virtualization_extensions = true
+      h3.linked_clone = true
+      h3.cpus = "1"
+      h3.memory = "1024"
+      h3.vmname = "anServer2"
+      h3.enable_checkpoints = false
+    end
+    anServer3.vm.provision "shell", inline: <<-SHELL
+     yum install python3 -y
+     pip3 install ansible
+    SHELL
+  end
+  #config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y ansible
+  #  SHELL
 end

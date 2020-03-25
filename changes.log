@@ -13,3 +13,5 @@ version 0.10
 	disabled checkpoints in virtual machine
 	anServer1.vm.hostname = "anServer1" - configures hostname for a machine
 
+version 0.11 
+	Added centOS machine with auatomated isntallation of the ansible through pip3
