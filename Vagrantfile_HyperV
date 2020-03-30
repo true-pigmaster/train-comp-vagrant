@@ -12,12 +12,12 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  # config.vm.box = "hashicorp/bionic64"
+  config.vm.box = "hashicorp/bionic64"
   #config.vm.box_version = "v1.0.282"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  # config.vm.box_url = "hashicorp/bionic64"
+  config.vm.box_url = "hashicorp/bionic64"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -50,21 +50,21 @@ Vagrant.configure("2") do |config|
   # Example for VirtualBox:
   #
   # config.vm.provider "hyperv"
-  # config.vm.provider "hyperv" do |h|
-    #  h.enable_virtualization_extensions = true
-    # h.linked_clone = true
-    # h.cpus = "1"
-    # memory = "1024"
+  config.vm.provider "hyperv" do |h|
+    h.enable_virtualization_extensions = true
+    h.linked_clone = true
+    h.cpus = "1"
+    memory = "1024"
+  end
+  # config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+  #   # Customize the amount of memory on the VM:
+  #   vb.memory = "1024"
   # end
-  # web1.vm.provider:hyperv do |h1|
-    # h1.enable_virtualization_extensions = true
-    # h1.linked_clone = true
-    # h1.cpus = "1"
-    # h1.memory = "1024"
-    # h1.vmname = "web1"
-    # h1.enable_checkpoints = false
-  # end
-    # View the documentation for the provider you are using for more
+  #
+  # View the documentation for the provider you are using for more
   # information on available options.
 
   # Enable provisioning with a shell script. Additional provisioners such as
@@ -74,61 +74,50 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-   #config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y ansible
-  #  SHELL
-  # config.vm.provider "virtualbox" do |vb|
-    #  vb.gui = true     # Display the VirtualBox GUI when booting the machine     
-    #  vb.memory = "1024" #Customize the amount of memory on the VM
-  # end
   config.vm.define "web1" do |web1|
     web1.vm.box = "hashicorp/bionic64"
     web1.vm.synced_folder ".", "/vagrant", disabled: true
     web1.vm.hostname = "web1"
-    web1.vm.provision "shell", inline: <<-SHELL
-    SHELL
+    web1.vm.provider:hyperv do |h1|
+      h1.enable_virtualization_extensions = true
+      h1.linked_clone = true
+      h1.cpus = "1"
+      h1.memory = "1024"
+      h1.vmname = "web1"
+      h1.enable_checkpoints = false
+    end
   end
   config.vm.define "web2" do |web2|
     web2.vm.box = "hashicorp/bionic64"
     web2.vm.synced_folder ".", "/vagrant", disabled: true
     web2.vm.hostname = "web2"
-    web2.vm.network "private_network", ip: "10.0.2.10", virtualbox__intnet: true
-    config.vm.provider "virtualbox" do |wvb2|
-      wvb2.gui = true     
-      wvb2.memory = "1024" 
-      wvb2.name = "web2"
-      wvb2.linked_clone = true
-      wvb2.cpus = 2
-   end
-    web2.vm.provision "shell", inline: <<-SHELL
-    SHELL
+    web2.vm.provider:hyperv do |h2|
+      h2.enable_virtualization_extensions = true
+      h2.linked_clone = true
+      h2.cpus = "1"
+      h2.memory = "1024"
+      h2.vmname = "web2"
+      h2.enable_checkpoints = false
+    end
   end
   config.vm.define "control" do |control|
     control.vm.box = "centos/7"
     control.vm.synced_folder ".", "/vagrant", disabled: true
     control.vm.hostname = "control"
-    control.vm.network "private_network", ip: "10.0.2.5", virtualbox__intnet: true
-    config.vm.provider "virtualbox" do |cvb|
-      cvb.gui = true     
-      cvb.memory = "1024" 
-      cvb.name = "control"
-      cvb.linked_clone = true
-      cvb.cpus = 2
-   end
+    control.vm.provider:hyperv do |h3|
+      h3.enable_virtualization_extensions = true
+      h3.linked_clone = true
+      h3.cpus = "1"
+      h3.memory = "1024"
+      h3.vmname = "control"
+      h3.enable_checkpoints = false
+    end
     control.vm.provision "shell", inline: <<-SHELL
      yum install ansible -y
     SHELL
   end
+  #config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y ansible
+  #  SHELL
 end
-
-# ToDo: Install virtualbox guest additions
-# yum install wget -y
-# yum install kernel-devel build-essential dkms
-# wget http://download.virtualbox.org/virtualbox/6.1.2/VBoxGuestAdditions_6.1.2.iso
-# sudo mkdir /media/VBoxGuestAdditions
-# sudo mount -o loop,ro VBoxGuestAdditions_6.1.2.iso /media/VBoxGuestAdditions
-# sudo sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
-# rm VBoxGuestAdditions_6.1.2.iso
-# sudo umount /media/VBoxGuestAdditions
-# sudo rmdir /media/VBoxGuestAdditions
