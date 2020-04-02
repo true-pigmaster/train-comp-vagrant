@@ -21,4 +21,8 @@ version 0.20
 	removed the installation of ansible on web1 and web2
 version 0.30
 	changed provider from hyperv to virtualBox
-
+version 0.35
+	tidying up the vagrant code, combined the lines that are common for every machine
+	added files for ansible playbook and made ansible hosts file 
+	ansible playbook - setting up the tomcat on web servers and mysql on db servers
+	added port redirection

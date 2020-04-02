@@ -1,0 +1,22 @@
+---
+  - hosts: webservers
+    become: yes
+    tasks:
+    - name: Install Tomcat.
+      package:
+       name: tomcat9
+       update_cache: yes
+       state: latest
+    - name: Check tomcat service
+      service: name=tomcat9 state=started enabled=yes
+
+  - hosts: databaseservers
+    become: yes
+    tasks:
+    - name: Install Sql Server.
+      package:
+       name: mysql-server
+       update_cache: yes
+       state: latest
+    - name: Check Mysql Service
+      service: name=mysql state=started enabled=yes
